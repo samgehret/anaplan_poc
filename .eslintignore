@@ -1,0 +1,13 @@
+config/*
+public/*
+scripts/*
+src/*
+tmp/*
+node_modules/*
+test/*
+offline_demos/*
+config/*
+deprecated/*
+*.min.js
+*third-party/*
+*.bundle.js

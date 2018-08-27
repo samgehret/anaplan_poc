@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <title>Anaplan Account and Sales Planner</title>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='Your favicon path goes here' type='image/x-icon'>
+  <!-- Mapbox GL-JS CSS -->
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.css' rel='stylesheet' />
+  <!-- Mapbox Assembly -->
+  <link href='https://api.mapbox.com/mapbox-assembly/v0.21.0/assembly.min.css' rel='stylesheet'>
+  <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.0/assembly.js"></script>
+  <link href='https://api.mapbox.com/mapbox-assembly/mapbox-addon/v0.3.0/assembly.min.css' rel='stylesheet'>
+  <script src='https://api.mapbox.com/mapbox-assembly/mapbox-addon/v0.3.0/assembly.js'></script>
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
+  <!-- Custom styles -->
+  <link href='main.css' rel='stylesheet' type="text/css" />
+</head>
+
+<body>
+  <div class='viewport-full relative clip'>
+    <div class="viewport-twothirds viewport-full-ml relative">
+      <div id='map' class='absolute top left right bottom'></div>
+    </div>
+
+    <div class='absolute top-ml left z1 w-full w300-ml py6 px6 my6 mx6'>
+      <div class='flex viewport-third h-auto-ml hmax-full bg-white round-ml shadow-darken5 scroll-auto py12 px12'>
+        <div class='inline my6 py6'>
+          <h3 id = 'title1' class='align-center txt-m txt-bold mb6'>Anaplan Sales Territory Manager</h3>
+        </div>
+        <div class='inline my6 py6'>
+          <p class='align-center'>This Anaplan add-on feature allows users to visualize crucial Accounts KPIS by zip code</p>
+        </div>
+        <div class='align-center'>
+          <div class='inline my6 py6'>
+
+            <h2 class='my6 py6 align-center territory'>Select Sales Territory</h2>
+          </div>
+          <div class='my6 py6'>
+            <select id="selector">
+              <option value="PA">Pennsylvania</option>
+              <option value="ME">Maine</option>
+              <option value="OR">Oregon</option>
+              <option value="CA">California</option>
+              <option value="NY">New York</option>
+              <option value="VA">Virginia</option>
+              <option value="NC">North Carolina</option>
+              <option value="UT">Utah</option>
+              <option value="TX">Texas</option>
+              <option value="VT">Vermont</option>
+              <option value="NH">New Hampshire</option>
+              <option value="WY">Wyoming</option>
+              <option value="MT">Montana</option>
+              <option value="NM">New Mexico</option>
+              <option value="SC">South Carolina</option>
+              <option value="AZ">Arizona</option>
+              <option value="AZ">Arizona</option>
+            </select>
+          </div>
+
+          <div class='inline my6 py6'>
+            <button id='button' class='btn align-center'>Update Map</button>
+          </div>
+          
+        </div>
+        <p class='territory my6 py6 ' id='total'>Total Sales For Selected Territory</p>
+        <div id='totalsales' class='territory align-center txt-m my12 py12'>$0</div>
+        <p class='territory my6 py6 ' id='total'>Total Number of Accounts</p>
+        <div id='totalaccounts' class='territory align-center txt-m my12 py12'>0</div>
+        <button id='save' class='btn align-center'>Save Changes</button>
+      </div>
+      <footer class='p12 bg-gray-faint txt-s'>
+        Footer content here
+      </footer>
+    </div>
+  </div>
+
+  <script src='bundle.js' type="text/javascript"></script>
+</body>
+
+</html>
