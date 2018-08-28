@@ -1,5 +1,5 @@
 const mapboxgl = require("mapbox-gl");
-mapboxgl.accessToken = "";
+mapboxgl.accessToken = "pk.eyJ1Ijoic2FtZ2VocmV0IiwiYSI6ImNqZWExcDdwNTAxYnEyeG1tZnQ4MTNsODkifQ.68r_UjBeRkubf5eUs4uw-g";
 const segmentInsert = require("@mapbox/segmentio-insert");
 const analytics = segmentInsert("fl0c8p240n");
 analytics.track("Demo Viewed", {
@@ -40,7 +40,7 @@ map.on("load", () => {
   axios.get('https://api-beta.anaplan.com/mapbox/1/lists/zips')
     .then(function (response) {
       zipData = response.data
-      // console.log(zipData)
+      console.log(zipData)
     })
     .catch(function (error) {
       console.log(error);
@@ -67,16 +67,21 @@ map.on("load", () => {
     url: "mapbox://mapbox.enterprise-boundaries-p4-v2"
   })
 
+
+  const LassoDraw = MapboxDraw.modes.draw_polygon
+  MapboxDraw.modes.draw_polygon.toggleButton = function () {
+    toggleIcon('mapbox-gl-draw_polygon', true);
+  }
+  LassoDraw.toggleButton = function () {
+    toggleIcon('mapbox-gl-draw_lasso', true);
+  }
   const draw = new MapboxDraw({
     displayControlsDefault: false,
     controls: {
       polygon: true,
-      trash: true,
-      point: true
+      trash: true
     }
   })
-
-  const LassoDraw = MapboxDraw.modes.draw_polygon
 
   LassoDraw.onSetup_original = function () {
     const polygon = this.newFeature({
@@ -115,6 +120,7 @@ map.on("load", () => {
     if (!state.toggled) {
       const factor = Math.min(Math.floor(this.map.getZoom()), 4);
       let tolerance = (3 / ((this.map.getZoom() - factor) * 150)) - 0.001 // https://www.desmos.com/calculator/b3zi8jqskw
+
       if (tolerance < 0 || !(isFinite(tolerance))) {
         // Tolerance cannot be negative
         tolerance = 0;
@@ -254,8 +260,14 @@ map.on("load", () => {
           bounds2,
           bounds3
         ]
-      ],
-      {padding: {top: 0, bottom:150, left: 500, right: 0}});
+      ], {
+        padding: {
+          top: 0,
+          bottom: 150,
+          left: 500,
+          right: 0
+        }
+      });
     }
     // helper to aggregate data 
     function aggregateData(region_id) {
@@ -269,11 +281,11 @@ map.on("load", () => {
         }
       }
       salesAg.forEach(zip => {
-        sales = parseInt(sales + postal4_lookup[zip] / 100)
+        sales = parseInt(sales + postal4_lookup[zip] / 1000)
         numAccounts = parseInt(numAccounts + postal4_count[zip])
       })
-      document.getElementById('totalsales').innerHTML = `$${sales}`
-      document.getElementById('totalaccounts').innerHTML = numAccounts
+      document.getElementById('totalsales').innerHTML = `$${sales.toLocaleString()} k`
+      document.getElementById('totalaccounts').innerHTML = numAccounts.toLocaleString()
     }
 
     function clickevent(e) {
@@ -312,11 +324,15 @@ map.on("load", () => {
         }
       })
       console.log(changedParent)
+      document.querySelector('.api-post').style.visibility = 'visible'
+      document.querySelector('.spin-div').style.visibility = 'visible'
       console.log('finished')
       axios.post('https://api-beta.anaplan.com/mapbox/1/lists/zips', changedParent)
         // console.log('sending request')
         .then(function (response) {
           console.log(response)
+          document.querySelector('.api-post').style.visibility = 'hidden'
+          document.querySelector('.spin-div').style.visibility = 'hidden'
         })
         .catch(function (error) {
           console.log(error);
@@ -518,7 +534,7 @@ map.on("load", () => {
         const innerLi2 = d.createElement("li");
         const innerLi4 = d.createElement("li");
         const innerLiText3 = d.createTextNode(`Zip Code: ${features[0].properties.id}`);
-        const innerLiText = d.createTextNode(`Total Sales: $${postal4_lookup[features[0].properties.id]}`);
+        const innerLiText = d.createTextNode(`Total Sales: $${postal4_lookup[features[0].properties.id].toLocaleString()}`);
         const innerLiText2 = d.createTextNode(`Total Accounts: ${postal4_group_lookup[features[0].properties.id]}`);
         const innerLiText4 = d.createTextNode(`Sales Territory: ${region_lookup[features[0].properties.id]}`);
         innerLi3.appendChild(innerLiText3);
