@@ -38,22 +38,23 @@ map.on("load", () => {
   console.log("Map is ready");
 
   axios.get('https://api-beta.anaplan.com/mapbox/1/lists/zips')
-  .then(function (response) {
-    zipData = response.data
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+    .then(function (response) {
+      zipData = response.data
+      // console.log(zipData)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
-.then(function (response) {
-  data = response.data
-  // console.log('data', data)
-  initmap();
-})
-.catch(function (error) {
-  console.log(error);
-});
+  axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
+    .then(function (response) {
+      data = response.data
+      // console.log('data', data)
+      initmap();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   for (var key in lookupTable.p4.data.all) {
     lookupTableArray.push({
@@ -151,7 +152,7 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
   map.addControl(draw)
 
   function initmap() {
-  
+
     function updateArea(e) {
       var data = draw.getAll()
       if (data.features.length > 0) {
@@ -175,9 +176,9 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
             }
             return memo
           }, []
-        ) 
-    
-     
+        )
+
+
         // console.log(filter)
         filter.forEach(k => {
           region_lookup[k] = document.getElementById('selector').value
@@ -191,18 +192,22 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
         // }
         // document.getElementById('num-employees').innerHTML = `Number of Employees: ${sumEmployees}`
         // document.getElementById('num-accounts').innerHTML = `Number of Accounts: ${matchArray.length}`
-  
+
       } else {
         // map.setLayoutProperty('postal-2-highlighted', 'visibility', 'none')
         // document.getElementById('num-employees').innerHTML = `Number of Employees: 0`
         // document.getElementById('num-accounts').innerHTML = `Number of Accounts: 0`
-  
+
       }
     }
 
     //helper to change colors of zips from dropdown selection
     function colorSelection(region_id) {
-
+      // console.log(region_lookup)
+      let bounds0 = 0
+      let bounds1 = 100
+      let bounds2 = -100
+      let bounds3 = 0
       for (var key in region_lookup) {
         if (region_lookup[key] == region_id) {
           // selectedIDs.push(id_lookup[region_lookup[key]])
@@ -214,6 +219,18 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
             "clicked": 1
           });
           // console.log(lookupTable.p4.data.all[key].bounds)
+          if (lookupTable.p4.data.all[key].bounds[0] < bounds0) {
+            bounds0 = lookupTable.p4.data.all[key].bounds[0]
+          }
+          if (lookupTable.p4.data.all[key].bounds[1] < bounds1) {
+            bounds1 = lookupTable.p4.data.all[key].bounds[1]
+          }
+          if (lookupTable.p4.data.all[key].bounds[2] > bounds2) {
+            bounds2 = lookupTable.p4.data.all[key].bounds[2]
+          }
+          if (lookupTable.p4.data.all[key].bounds[3] > bounds3) {
+            bounds3 = lookupTable.p4.data.all[key].bounds[3]
+          }
         } else {
           map.setFeatureState({
             source: "postal-4-source",
@@ -225,10 +242,20 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
 
         }
       }
-      // map.flyTo({
-      //   center: [centroid_lookup[region_id][0], centroid_lookup[region_id][1]],
-      //   zoom: 6
-      // })
+      console.log('bounds0', bounds0)
+      console.log('bounds0', bounds1)
+      console.log('bounds0', bounds2)
+      console.log('bounds0', bounds3)
+      map.fitBounds([
+        [
+          bounds0, bounds1
+        ],
+        [
+          bounds2,
+          bounds3
+        ]
+      ],
+      {padding: {top: 0, bottom:150, left: 500, right: 0}});
     }
     // helper to aggregate data 
     function aggregateData(region_id) {
@@ -254,6 +281,8 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
         layers: ["postal-4-layer"]
       });
 
+      console.log(features)
+
       if (features.length) {
         region_lookup[features[0].properties.id] = document.getElementById('selector').value
         for (var key in region_lookup) {
@@ -271,12 +300,12 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
       aggregateData(document.getElementById('selector').value)
 
     }
-    
-//Function to track whether or not regions where changed
-    function getDiff () {
+
+    //Function to track whether or not regions where changed
+    function getDiff() {
       let changedParent = []
       zipData.forEach(k => {
-        if(k.Parent != region_lookup[k.Zips] && k.Zips != "USP4") {
+        if (k.Parent != region_lookup[k.Zips] && k.Zips != "USP4") {
           // console.log(k)
           k.Parent = region_lookup[k.Zips]
           changedParent.push(k)
@@ -285,9 +314,16 @@ axios.get('https://api-beta.anaplan.com/mapbox/1/lists/flat-list')
       console.log(changedParent)
       console.log('finished')
       axios.post('https://api-beta.anaplan.com/mapbox/1/lists/zips', changedParent)
+        // console.log('sending request')
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-  
-    
+
+
     // console.log('data before loop', data)
     data.forEach(f => {
       let newData = {
