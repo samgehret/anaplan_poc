@@ -40,7 +40,7 @@ map.on("load", () => {
   axios.get('https://api-beta.anaplan.com/mapbox/1/lists/zips')
     .then(function (response) {
       zipData = response.data
-      console.log(zipData)
+      // console.log(zipData)
     })
     .catch(function (error) {
       console.log(error);
@@ -270,6 +270,14 @@ map.on("load", () => {
           right: 0
         }
       });
+    }
+
+    function undo() {
+      zipRegionArray.forEach(k => {
+
+        region_lookup[Object.keys(k)[0]] = Object.values(k)[0];
+      })
+      colorSelection(document.getElementById('selector').value)
     }
     // helper to aggregate data 
     function aggregateData(region_id) {
@@ -590,6 +598,7 @@ map.on("load", () => {
     })
 
     document.getElementById('save').addEventListener("click", getDiff)
+    document.getElementById('undo').addEventListener("click", undo)
     map.on("mousemove", move);
     map.on("click", clickevent);
     map.on('draw.create', updateArea)
