@@ -224,6 +224,8 @@ map.on("load", () => {
           }, {
             "clicked": 1
           });
+          console.log(key)
+          console.log(lookupTable.p4.data.all[key])
           // console.log(lookupTable.p4.data.all[key].bounds)
           if (lookupTable.p4.data.all[key].bounds[0] < bounds0) {
             bounds0 = lookupTable.p4.data.all[key].bounds[0]
