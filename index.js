@@ -486,7 +486,7 @@ map.on("load", () => {
       "source-layer": 'boundaries_postal_4',
       "paint": {
 
-        "fill-opacity": 1.0,
+        "fill-opacity": 0.4,
         "fill-color": ["case", ["==", ["feature-state", "clicked"], 1], "#0c2c84", "rgba(0,0,0,0)"]
       }
     })
