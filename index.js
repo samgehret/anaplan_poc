@@ -176,7 +176,8 @@ map.on("load", () => {
         )
         let filter = features.reduce(
           function (memo, feature) {
-            if (!(undefined === turf.intersect(feature, polygon))) {
+            var kinks = turf.kinks(polygon)
+            if (!(undefined === turf.intersect(turf.buffer(feature, 0), turf.buffer(polygon, 0)))) {
               // only add the property, if the feature intersects with the polygon drawn by the user
               memo.push(feature.properties.id)
             }
@@ -250,10 +251,6 @@ map.on("load", () => {
 
         }
       }
-      console.log('bounds0', bounds0)
-      console.log('bounds0', bounds1)
-      console.log('bounds0', bounds2)
-      console.log('bounds0', bounds3)
       map.fitBounds([
         [
           bounds0, bounds1
