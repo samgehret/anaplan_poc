@@ -228,27 +228,30 @@ map.on("load", () => {
           // console.log(key)
           // console.log(lookupTable.p4.data.all[key])
           // console.log(lookupTable.p4.data.all[key].bounds)
-          if (lookupTable.p4.data.all[key].bounds[0] < bounds0) {
-            bounds0 = lookupTable.p4.data.all[key].bounds[0]
-          }
-          if (lookupTable.p4.data.all[key].bounds[1] < bounds1) {
-            bounds1 = lookupTable.p4.data.all[key].bounds[1]
-          }
-          if (lookupTable.p4.data.all[key].bounds[2] > bounds2) {
-            bounds2 = lookupTable.p4.data.all[key].bounds[2]
-          }
-          if (lookupTable.p4.data.all[key].bounds[3] > bounds3) {
-            bounds3 = lookupTable.p4.data.all[key].bounds[3]
-          }
-        } else {
-          map.setFeatureState({
-            source: "postal-4-source",
-            sourceLayer: "boundaries_postal_4",
-            id: id_lookup[key]
-          }, {
-            "clicked": 0
-          });
 
+          if (lookupTable.p4.data.all[key]) {
+            if (lookupTable.p4.data.all[key].bounds[0] < bounds0) {
+              bounds0 = lookupTable.p4.data.all[key].bounds[0]
+            }
+            if (lookupTable.p4.data.all[key].bounds[1] < bounds1) {
+              bounds1 = lookupTable.p4.data.all[key].bounds[1]
+            }
+            if (lookupTable.p4.data.all[key].bounds[2] > bounds2) {
+              bounds2 = lookupTable.p4.data.all[key].bounds[2]
+            }
+            if (lookupTable.p4.data.all[key].bounds[3] > bounds3) {
+              bounds3 = lookupTable.p4.data.all[key].bounds[3]
+            }
+          } else {
+            map.setFeatureState({
+              source: "postal-4-source",
+              sourceLayer: "boundaries_postal_4",
+              id: id_lookup[key]
+            }, {
+              "clicked": 0
+            });
+
+          }
         }
       }
       map.fitBounds([
@@ -288,10 +291,10 @@ map.on("load", () => {
         }
       }
       salesAg.forEach(zip => {
-        sales = parseInt(sales + postal4_lookup[zip] / 1000)
+        sales = parseFloat(sales + postal4_lookup[zip] / 10000).toFixed(2)
         numAccounts = parseInt(numAccounts + postal4_count[zip])
       })
-      document.getElementById('totalsales').innerHTML = `$${sales.toLocaleString()} k`
+      document.getElementById('totalsales').innerHTML = `$${sales} M`
       document.getElementById('totalaccounts').innerHTML = numAccounts.toLocaleString()
     }
 
@@ -331,15 +334,15 @@ map.on("load", () => {
         }
       })
       console.log(changedParent)
-      document.querySelector('.api-post').style.visibility = 'visible'
-      document.querySelector('.spin-div').style.visibility = 'visible'
+      // document.querySelector('.api-post').style.visibility = 'visible'
+      // document.querySelector('.spin-div').style.visibility = 'visible'
       console.log('finished')
       axios.post('https://api-beta.anaplan.com/mapbox/1/lists/zips', changedParent)
         // console.log('sending request')
         .then(function (response) {
           console.log(response)
-          document.querySelector('.api-post').style.visibility = 'hidden'
-          document.querySelector('.spin-div').style.visibility = 'hidden'
+          // document.querySelector('.api-post').style.visibility = 'hidden'
+          // document.querySelector('.spin-div').style.visibility = 'hidden'
         })
         .catch(function (error) {
           console.log(error);
@@ -541,7 +544,7 @@ map.on("load", () => {
         const innerLi2 = d.createElement("li");
         const innerLi4 = d.createElement("li");
         const innerLiText3 = d.createTextNode(`Zip Code: ${features[0].properties.id}`);
-        const innerLiText = d.createTextNode(`Total Sales: $${postal4_lookup[features[0].properties.id].toLocaleString()}`);
+        const innerLiText = d.createTextNode(`Total Sales: $${postal4_lookup[features[0].properties.id]}`);
         const innerLiText2 = d.createTextNode(`Total Accounts: ${postal4_group_lookup[features[0].properties.id]}`);
         const innerLiText4 = d.createTextNode(`Sales Territory: ${region_lookup[features[0].properties.id]}`);
         innerLi3.appendChild(innerLiText3);
