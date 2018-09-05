@@ -229,30 +229,30 @@ map.on("load", () => {
           // console.log(lookupTable.p4.data.all[key])
           // console.log(lookupTable.p4.data.all[key].bounds)
 
-          if (lookupTable.p4.data.all[key]) {
-            if (lookupTable.p4.data.all[key].bounds[0] < bounds0) {
-              bounds0 = lookupTable.p4.data.all[key].bounds[0]
-            }
-            if (lookupTable.p4.data.all[key].bounds[1] < bounds1) {
-              bounds1 = lookupTable.p4.data.all[key].bounds[1]
-            }
-            if (lookupTable.p4.data.all[key].bounds[2] > bounds2) {
-              bounds2 = lookupTable.p4.data.all[key].bounds[2]
-            }
-            if (lookupTable.p4.data.all[key].bounds[3] > bounds3) {
-              bounds3 = lookupTable.p4.data.all[key].bounds[3]
-            }
-          } else {
-            map.setFeatureState({
-              source: "postal-4-source",
-              sourceLayer: "boundaries_postal_4",
-              id: id_lookup[key]
-            }, {
-              "clicked": 0
-            });
 
+          if (lookupTable.p4.data.all[key].bounds[0] < bounds0) {
+            bounds0 = lookupTable.p4.data.all[key].bounds[0]
           }
+          if (lookupTable.p4.data.all[key].bounds[1] < bounds1) {
+            bounds1 = lookupTable.p4.data.all[key].bounds[1]
+          }
+          if (lookupTable.p4.data.all[key].bounds[2] > bounds2) {
+            bounds2 = lookupTable.p4.data.all[key].bounds[2]
+          }
+          if (lookupTable.p4.data.all[key].bounds[3] > bounds3) {
+            bounds3 = lookupTable.p4.data.all[key].bounds[3]
+          }
+        } else {
+          map.setFeatureState({
+            source: "postal-4-source",
+            sourceLayer: "boundaries_postal_4",
+            id: id_lookup[key]
+          }, {
+            "clicked": 0
+          });
+
         }
+
       }
       map.fitBounds([
         [
@@ -270,6 +270,7 @@ map.on("load", () => {
           right: 0
         }
       });
+      aggregateData(region_id)
     }
 
     function undo() {
@@ -284,6 +285,7 @@ map.on("load", () => {
       let sales = 0
       let numAccounts = 0
       let salesAg = []
+      let agSales
 
       for (var key in region_lookup) {
         if (region_lookup[key] == region_id) {
@@ -291,10 +293,11 @@ map.on("load", () => {
         }
       }
       salesAg.forEach(zip => {
-        sales = parseFloat(sales + postal4_lookup[zip] / 10000).toFixed(2)
+        sales = ((sales + postal4_lookup[zip]))
+        agSales = (sales / 1000000).toFixed(2)
         numAccounts = parseInt(numAccounts + postal4_count[zip])
       })
-      document.getElementById('totalsales').innerHTML = `$${sales} M`
+      document.getElementById('totalsales').innerHTML = `$${agSales} M`
       document.getElementById('totalaccounts').innerHTML = numAccounts.toLocaleString()
     }
 
@@ -594,7 +597,7 @@ map.on("load", () => {
       selector = document.getElementById('selector').value
       // console.log(selector)
       colorSelection(selector)
-      aggregateData(selector)
+      // aggregateData(selector)
     })
 
     document.getElementById('save').addEventListener("click", getDiff)
