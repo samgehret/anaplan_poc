@@ -254,6 +254,12 @@ map.on("load", () => {
         }
 
       }
+      if (region_id === "NY2") {
+        console.log('going to ny2')
+        map.flyTo({center: [-74.2605533, 40.6971478], zoom: 9})
+
+      }
+      else {
       map.fitBounds([
         [
           bounds0, bounds1
@@ -270,6 +276,7 @@ map.on("load", () => {
           right: 0
         }
       });
+    }
       aggregateData(region_id)
     }
 
@@ -285,18 +292,20 @@ map.on("load", () => {
       let sales = 0
       let numAccounts = 0
       let salesAg = []
-      let agSales
+      let agSales = 0
 
       for (var key in region_lookup) {
         if (region_lookup[key] == region_id) {
           salesAg.push(key)
         }
       }
+      if(salesAg.length > 0) {
       salesAg.forEach(zip => {
         sales = ((sales + postal4_lookup[zip]))
         agSales = (sales / 1000000).toFixed(2)
         numAccounts = parseInt(numAccounts + postal4_count[zip])
       })
+    }
       document.getElementById('totalsales').innerHTML = `$${agSales} M`
       document.getElementById('totalaccounts').innerHTML = numAccounts.toLocaleString()
     }
@@ -306,7 +315,7 @@ map.on("load", () => {
         layers: ["postal-4-layer"]
       });
 
-      console.log(features)
+      // console.log(features)
 
       if (features.length) {
         region_lookup[features[0].properties.id] = document.getElementById('selector').value
@@ -336,14 +345,14 @@ map.on("load", () => {
           changedParent.push(k)
         }
       })
-      console.log(changedParent)
+      // console.log(changedParent)
       // document.querySelector('.api-post').style.visibility = 'visible'
       // document.querySelector('.spin-div').style.visibility = 'visible'
       console.log('finished')
       axios.post('https://api-beta.anaplan.com/mapbox/1/lists/zips', changedParent)
         // console.log('sending request')
         .then(function (response) {
-          console.log(response)
+          // console.log(response)
           // document.querySelector('.api-post').style.visibility = 'hidden'
           // document.querySelector('.spin-div').style.visibility = 'hidden'
         })
@@ -398,7 +407,7 @@ map.on("load", () => {
     }
 
     const postal4poly_domain = [];
-    console.log
+    // console.log
     // console.log('postal4groups', postal4_groups)
     postal4_groups.forEach(k => {
       postal4poly_domain.push(Object.values(k)[0]);
