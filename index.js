@@ -1,5 +1,5 @@
 const mapboxgl = require("mapbox-gl");
-mapboxgl.accessToken = "pk.eyJ1Ijoic2FtZ2VocmV0IiwiYSI6ImNqZWExcDdwNTAxYnEyeG1tZnQ4MTNsODkifQ.68r_UjBeRkubf5eUs4uw-g";
+mapboxgl.accessToken = "pk.eyJ1IjoibWFwbWFuMjciLCJhIjoiY2p0N21rZTduMHRjbzQ0cDM4aWEzNnZoNCJ9.0W1yZ5oX3dChiUD6AFAUSw";
 const segmentInsert = require("@mapbox/segmentio-insert");
 const analytics = segmentInsert("fl0c8p240n");
 analytics.track("Demo Viewed", {
